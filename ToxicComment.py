@@ -17,22 +17,17 @@ def wakatiWithTT(txt):
     validPos = ['VV', 'NN', 'NP', 'JJ', 'VH']
     extractedTag = list()
     [extractedTag.append(tag.split()[2]) for tag in tags if tag.split()[1][0:2] in validPos]
-    '''
-    for tag in tags:
-        sptag = tag.split()
-        if (sptag[1][0:2] in validPos):
-            extractedTag.append(sptag[2])
-    '''
+    # print("OK")
     return extractedTag
 
 
 if __name__ == '__main__':
     # get train Data
-    data = pd.read_csv('./data/train.csv', encoding='utf-8')
+    data = pd.read_csv('./data/test.csv', encoding='utf-8')
     attrs = ['toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate']
 
     # Preprocessing train Data
     with Pool(multi.cpu_count()) as p:
-        wakati = list(tqdm.tqdm(p.imap(wakatiWithTT, data['comment_text']), total=data['comment_text'].size))
+        wakati = list(p.imap(wakatiWithTT, tqdm.tqdm(data['comment_text'])))
     data['CommentTxtWakati'] = pd.Series(wakati)
-    data.to_csv('./data/train_wakated.csv')
+    data.to_csv('./data/test_wakated.csv')
