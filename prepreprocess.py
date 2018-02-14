@@ -30,3 +30,13 @@ with open('./traintestData/trainVocabPre.pickle', mode='wb') as f:
 with open('./traintestData/testVocabPre.pickle', mode='wb') as f:
     pickle.dump(vocabTe, f)
 
+attrs = ['toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate']
+label = list()
+for a in attrs:
+    label.append(train[a].tolist())
+label = np.array(label)
+label = label.T
+
+with open('./traintestData/trainLabel.pickle', mode='wb') as f:
+    pickle.dump(label, f)
+print(label.shape)
