@@ -3,6 +3,7 @@ from sklearn.model_selection import train_test_split
 from sklearn import linear_model
 import pickle
 import numpy as np
+from downSampling import downSampling
 
 
 def trans(vocab, model):
@@ -22,10 +23,7 @@ def trans(vocab, model):
 if __name__ == '__main__':
     # prepare
     print('start transform traindata')
-    with open('./traintestData/trainVocabW2VSUM.pickle', mode='rb') as f:
-        trainList = pickle.load(f)
-    with open('./traintestData/trainLabel.pickle', mode='rb') as f:
-        label = pickle.load(f)
+    trainList, label = downSampling(16225)
     # split
     ts = 0.3
     Xtra, Xte, Ytra, Yte = train_test_split(trainList, label, test_size=ts)

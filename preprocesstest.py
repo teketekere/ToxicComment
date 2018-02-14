@@ -4,7 +4,7 @@ from sklearn.model_selection import train_test_split
 import pickle
 import numpy as np
 import tqdm
-from logisticLearn import trans
+from Learn import trans
 
 
 # 単語をW2Vで特徴量ベクトルに変換してPickle化
