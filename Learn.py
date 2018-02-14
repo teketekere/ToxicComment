@@ -4,7 +4,7 @@ from sklearn import linear_model
 import pickle
 import numpy as np
 from downSampling import downSampling
-
+import tqdm
 
 def trans(vocab, model):
     # For文で最初に処理するデータがinvalidな場合if-elseで止まる不具合あり

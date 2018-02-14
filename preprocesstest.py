@@ -8,7 +8,7 @@ from Learn import trans
 
 
 # 単語をW2Vで特徴量ベクトルに変換してPickle化
-model = Word2Vec.load('./model/w2v.model')
+model = Word2Vec.load('./model/w2v300.model')
 
 # test data
 print('start test transform')

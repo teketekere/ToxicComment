@@ -145,3 +145,4 @@ venv.bak/
 /data/
 /submission/
 /model/
+/traintestData/*.pickle
