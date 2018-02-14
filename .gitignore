@@ -144,3 +144,4 @@ venv.bak/
 # mysettings
 /data/
 /submission/
+/model/
