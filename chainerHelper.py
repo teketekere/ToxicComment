@@ -33,10 +33,13 @@ class ChainerHelper(object):
         self.model.compute_accuracy = False
         self.epoch = epoch
         
-    def fit(self, x, y):
-        # train data
+    def fit(self, x, y, tx, ty):
+        # prepare data
+        bsize = 100
         train = tuple_dataset.TupleDataset(x, y)
-        train_iter  = chainer.iterators.SerialIterator(train, batch_size=100)
+        train_iter  = chainer.iterators.SerialIterator(train, batch_size=bsize)
+        test = tuple_dataset.TupleDataset(tx, ty)
+        test_iter = chainer.iterators.SerialIterator(test, batch_size=bsize, repeat=False, shuffle=False)
 
         # model
         optimizer = chainer.optimizers.Adam()
@@ -44,7 +47,9 @@ class ChainerHelper(object):
         
         updater = training.StandardUpdater(train_iter, optimizer, device=-1)
         trainer = training.Trainer(updater, (self.epoch, 'epoch'), out="result")
+        trainer.extend(extensions.Evaluator(test_iter, self.model, device=-1))
         trainer.extend(extensions.LogReport())
+        trainer.extend(extensions.PrintReport( ['epoch', 'main/loss', 'validation/main/loss']))
         trainer.extend(extensions.ProgressBar())
 
         # learn

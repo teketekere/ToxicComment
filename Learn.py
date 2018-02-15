@@ -35,7 +35,7 @@ if __name__ == '__main__':
     input = Xtra.shape[1]
     output = Ytra.shape[1]
     clf = ChainerHelper(input, output)
-    clf.fit(Xtra, Ytra)
+    clf.fit(Xtra, Ytra, Xte, Yte)
 
     # save model
     clf.save('./model/ChainerNN.model')
