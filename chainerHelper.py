@@ -44,6 +44,7 @@ class ChainerHelper(object):
         
         updater = training.StandardUpdater(train_iter, optimizer, device=-1)
         trainer = training.Trainer(updater, (self.epoch, 'epoch'), out="result")
+        trainer.extend(extensions.LogReport())
         trainer.extend(extensions.ProgressBar())
 
         # learn
