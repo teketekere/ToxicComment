@@ -18,9 +18,15 @@ trainList = trans(vocabTr, model)
 del(vocabTr)
 del(model)
 
-with open('./traintestData/trainVocabW2VSUM.pickle', mode='wb') as f:
-    pickle.dump(trainList, f)
+size = len(trainList) // 2
+trainList_1 = trainList[0: size]
+trainList_2 = trainList[size: len(trainList)]
+del(trainList)
 
-
+with open('./traintestData/trainVocabW2VSUM_1.pickle', mode='wb') as f:
+    pickle.dump(trainList_1, f)
+del(trainList_1)
+with open('./traintestData/trainVocabW2VSUM_2.pickle', mode='wb') as f:
+    pickle.dump(trainList_2, f)
 
 print('finished')

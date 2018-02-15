@@ -34,9 +34,8 @@ attrs = ['toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate'
 label = list()
 for a in attrs:
     label.append(train[a].tolist())
-label = np.array(label)
+label = np.array(label, dtype='float32')
 label = label.T
-
 with open('./traintestData/trainLabel.pickle', mode='wb') as f:
     pickle.dump(label, f)
 print(label.shape)

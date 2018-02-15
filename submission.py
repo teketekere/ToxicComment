@@ -3,12 +3,12 @@ from sklearn.model_selection import train_test_split
 from sklearn import linear_model
 import pickle
 import numpy as np
+from chainerHelper import ChainerHelper
 
 
 def getPred(y, clf):
     pred = clf.predict(y)
     return pred
-
 
 if __name__ == '__main__':
     # testdata
@@ -16,9 +16,12 @@ if __name__ == '__main__':
         testList = pickle.load(f)
 
     # load model
-    modelfile = './model/MultiElasticNet.model'
-    with open(modelfile, 'rb') as f:
-        clf = pickle.load(f)
+    # modelfile = './model/MultiElasticNet.model'
+    # with open(modelfile, 'rb') as f:
+    #    clf = pickle.load(f)
+    clf = ChainerHelper(300, 6)
+    modelfile = './model/ChainerNN.model'
+    clf.load(modelfile)
 
     # predict
     predict = getPred(testList, clf)

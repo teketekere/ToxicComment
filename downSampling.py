@@ -15,8 +15,13 @@ def downSampling(upperBound=16225):
     validId = [extracted['id'][i] for i in range(extracted.shape[0]) if(i in sidx)]
 
     # ToxicComment or validIdに入っているデータのみ使用する
-    with open('./traintestData/trainVocabW2VSUM.pickle', mode='rb') as f:
+    with open('./traintestData/trainVocabW2VSUM_1.pickle', mode='rb') as f:
         trainList = pickle.load(f)
+    with open('./traintestData/trainVocabW2VSUM_2.pickle', mode='rb') as f:
+        templist = pickle.load(f)
+    trainList = np.vstack((trainList, templist))
+    del(templist)
+
     with open('./traintestData/trainLabel.pickle', mode='rb') as f:
         label = pickle.load(f)
     validTrainList = list()

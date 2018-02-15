@@ -1,3 +1,5 @@
+# W2V本体
+
 from gensim.models.word2vec import Word2Vec
 import pandas as pd
 
@@ -20,6 +22,8 @@ for j in range(2):
 
 # learn
 print('start learning')
-model = Word2Vec(sentences=vocab, size=50, window=5, min_count=5, workers=4, iter=50)
-model.save('./model/w2v.model')
+size = 300
+model = Word2Vec(sentences=vocab, size=size, window=5, min_count=5, workers=4, iter=50)
+modelname = './model/w2v' + str(size) +  '.model'
+model.save(modelname)
 print('finished')
