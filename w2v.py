@@ -23,7 +23,7 @@ for j in range(2):
 # learn
 print('start learning')
 size = 300
-model = Word2Vec(sentences=vocab, size=size, window=5, min_count=5, workers=4, iter=50)
-modelname = './model/w2v' + str(size) +  '.model'
+model = Word2Vec(sentences=vocab, size=size, window=5, min_count=5, workers=4, iter=55)
+modelname = './model/w2v' + str(size) + '.model'
 model.save(modelname)
 print('finished')

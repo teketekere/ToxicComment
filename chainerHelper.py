@@ -8,43 +8,43 @@ from chainer.datasets import tuple_dataset
 
 
 class MyChain(Chain):
-    def __init__(self, inputDim, outputDim):
-        self.input = inputDim
+    def __init__(self, outputDim):
         self.output = outputDim
+        nunits = 200
         super(MyChain, self).__init__(
-            l1=L.Linear(self.input, 512),
-            l2=L.Linear(512, 256),
-            l3=L.Linear(256, 64),
-            l4=L.Linear(64, self.output)
+            l1=L.Linear(None, nunits),
+            l2=L.Linear(None, nunits),
+            l3=L.Linear(None, nunits),
+            l4=L.Linear(None, self.output)
         )
 
     def __call__(self, x):
-        h1 = F.relu(self.l1(x))
-        h2 = F.relu(self.l2(h1))
-        h3 = F.relu(self.l3(h2))
+        h1 = F.dropout(F.relu(self.l1(x)))
+        h2 = F.dropout(F.relu(self.l2(h1)))
+        h3 = F.dropout(F.relu(self.l3(h2)))
         o  = self.l4(h3)
         return o
 
 
 class ChainerHelper(object):
-    def __init__(self, input, output, epoch=10):
-        chainerobject = MyChain(inputDim=input, outputDim=output)
+    def __init__(self, output, epoch=150):
+        chainerobject = MyChain(outputDim=output)
         self.model = L.Classifier(chainerobject, lossfun=F.mean_squared_error)
         self.model.compute_accuracy = False
         self.epoch = epoch
-        
+
     def fit(self, x, y, tx, ty):
         # prepare data
-        bsize = 100
+        bsize = 50
         train = tuple_dataset.TupleDataset(x, y)
         train_iter  = chainer.iterators.SerialIterator(train, batch_size=bsize)
         test = tuple_dataset.TupleDataset(tx, ty)
         test_iter = chainer.iterators.SerialIterator(test, batch_size=bsize, repeat=False, shuffle=False)
 
         # model
-        optimizer = chainer.optimizers.Adam()
+        optimizer = chainer.optimizers.AdaDelta(rho=0.9)
         optimizer.setup(self.model)
-        
+
         updater = training.StandardUpdater(train_iter, optimizer, device=-1)
         trainer = training.Trainer(updater, (self.epoch, 'epoch'), out="result")
         trainer.extend(extensions.Evaluator(test_iter, self.model, device=-1))
@@ -54,7 +54,7 @@ class ChainerHelper(object):
 
         # learn
         trainer.run()
-        
+
     def save(self, filename):
         # save model
         chainer.serializers.save_npz(filename, self.model)
@@ -63,7 +63,7 @@ class ChainerHelper(object):
         data = Variable(x)
         predictor = self.model.predictor(data)
         return predictor.data
-        
+
     def score(self, x, y):
         data = Variable(x)
         pred = self.model.predictor(data)

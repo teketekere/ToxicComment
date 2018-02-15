@@ -1,6 +1,7 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn import linear_model
+from sklearn import ensemble
 import pickle
 import numpy as np
 from downSampling import downSampling
@@ -25,23 +26,24 @@ if __name__ == '__main__':
     # prepare
     print('start transform traindata')
     trainList, label = downSampling(16225)
-    
+
     # split
     ts = 0.3
     Xtra, Xte, Ytra, Yte = train_test_split(trainList, label, test_size=ts)
 
     # learn
     print('start learning')
-    input = Xtra.shape[1]
-    output = Ytra.shape[1]
-    clf = ChainerHelper(input, output)
-    clf.fit(Xtra, Ytra, Xte, Yte)
+    attrs = ['toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate']
+    clfs = list()
+    for idx, a in enumerate(attrs):
+        clf = ensemble.RandomForestRegressor()
+        clf.fit(Xtra, Ytra[:, idx])
+        print('score: %.5f' % (clf.score(Xte, Yte[:, idx])))
+        clfs.append(clf)
 
     # save model
-    clf.save('./model/ChainerNN.model')
-
-    # score
-    print('score: %.5f' % (clf.score(Xte, Yte)))
+    modelname = './model/RFReg.model'
+    with open(modelname, 'wb') as f:
+        pickle.dump(clfs, f)
 
     print('finished')
-
