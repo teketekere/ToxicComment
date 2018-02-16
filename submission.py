@@ -20,7 +20,7 @@ if __name__ == '__main__':
         testList = pickle.load(f)
 
     # load model
-    modelfile = './model/GBRT0.2.model'
+    modelfile = './model/GBRTex0.2.model'
     with open(modelfile, 'rb') as f:
         clfs = pickle.load(f)
 
