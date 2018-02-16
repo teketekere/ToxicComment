@@ -20,7 +20,7 @@ if __name__ == '__main__':
         testList = pickle.load(f)
 
     # load model
-    modelfile = './model/RGReg.model'
+    modelfile = './model/GBRT0.2.model'
     with open(modelfile, 'rb') as f:
         clfs = pickle.load(f)
 
@@ -32,8 +32,6 @@ if __name__ == '__main__':
     attrs = ['toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate']
     for idx, val in enumerate(attrs):
         submissionData[val] = predict[idx]
-        # submissionData[val] = [0.0 if v < 0.0 else v for v in submissionData[val]]
-        # submissionData[val] = [1.0 if v > 1.0 else v for v in submissionData[val]]
 
     # save submission data
     import time
