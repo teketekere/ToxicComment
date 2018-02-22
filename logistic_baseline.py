@@ -4,6 +4,8 @@ import os
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
+from sklearn import linear_model
+from sklearn import ensemble
 from sklearn.model_selection import cross_val_score
 from scipy.sparse import hstack
 import pickle
@@ -74,19 +76,24 @@ else:
     with open(testTfidfPath, 'wb') as f:
         pickle.dump(test_features, f)
 
-
+clfname = "gbt"
 print("start fitting")
 scores = []
 submission = pd.DataFrame.from_dict({'id': test['id']})
 for class_name in class_names:
     train_target = train[class_name]
-    classifier = LogisticRegression(solver='sag')
-    cv_score = np.mean(cross_val_score(classifier, train_features, train_target, cv=3, scoring='roc_auc'))
-    scores.append(cv_score)
-    print('CV score for class {} is {}'.format(class_name, cv_score))
+    # classifier = LogisticRegression(solver='sag')
+    classifier = ensemble.GradientBoostingRegressor(n_estimators=500, verbose=True)
+    # cv_score = np.mean(cross_val_score(classifier, train_features, train_target, cv=3, scoring='roc_auc'))
+    # scores.append(cv_score)
+    # print('CV score for class {} is {}'.format(class_name, cv_score))
     classifier.fit(train_features, train_target)
-    submission[class_name] = classifier.predict_proba(test_features)[:, 1]
+    # submission[class_name] = classifier.predict_proba(test_features)[:, 1]
+    submission[class_name] = classifier.predict(test_features)
 
-print('Total CV score is {}'.format(np.mean(scores)))
+# print('Total CV score is {}'.format(np.mean(scores)))
 
-submission.to_csv('./submission/logisticbaseline_submission.csv', index=False)
+import time
+timestr = time.strftime("%Y%m%d-%H%M%S")
+submissionName = './submission/' + clfname + timestr + '.csv'
+submission.to_csv(submissionName, index=False)
