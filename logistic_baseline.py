@@ -25,6 +25,8 @@ word_vectorizer = TfidfVectorizer(
     ngram_range=(1, 2),
     max_features=20000)
 word_vectorizer.fit(all_text)
+with open('./traintestData/word_vectorizer.pickle', 'wb') as f:
+    pickle.dump(word_vectorizer, f)
 train_word_features = word_vectorizer.transform(train_text)
 test_word_features = word_vectorizer.transform(test_text)
 
@@ -36,16 +38,13 @@ char_vectorizer = TfidfVectorizer(
     ngram_range=(2, 6),
     max_features=30000)
 char_vectorizer.fit(all_text)
+with open('./traintestData/char_vectorizer.pickle', 'wb') as f:
+    pickle.dump(char_vectorizer, f)
 train_char_features = char_vectorizer.transform(train_text)
 test_char_features = char_vectorizer.transform(test_text)
 
 train_features = hstack([train_char_features, train_word_features])
 test_features = hstack([test_char_features, test_word_features])
-
-with open('./traintestData/ngram_train.pickle', 'wb') as f:
-    pickle.dump(train_features, f)
-with open('./traintestData/ngram_test.pickle', 'wb') as f:
-    pickle.dump(test_features, f)
 
 scores = []
 submission = pd.DataFrame.from_dict({'id': test['id']})
